@@ -1,0 +1,41 @@
+@startuml
+' Despliegue contenerizado para la memoria
+
+top to bottom direction
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+skinparam wrapWidth 155
+skinparam linetype ortho
+skinparam nodesep 45
+skinparam ranksep 50
+
+title Despliegue reproducible con Docker Compose
+
+rectangle "Entorno Docker en el equipo anfitrión\nWindows · macOS · Linux" as Host {
+    package "Red interna de Docker Compose" as Compose #F5F5F5 {
+        component "Contenedor app\nNode.js 22 + Express\n\nserver/ · database/ · public/\nsum-check-protocol/\nDB_HOST=db" as App #E8F5E9
+        component "Contenedor db-init\nEjecución temporal\n\ndatabase/db_setup.js\nPrepara el esquema" as Init #FFF3E0
+        database "Contenedor db\nPostgreSQL 17\n\nBase de datos usuarios" as DB #FFF3E0
+        storage "Volumen\npostgres_data\nPersistencia" as Volume #FFF9C4
+
+        App -left-> DB
+        DB -down-> Volume
+        Init -down-> DB
+    }
+}
+
+component "Navegador web\nEquipo anfitrión\nHTTP · localhost:3000" as Browser #E3F2FD
+actor "Usuario" as User
+
+Host -[hidden]right-> Browser
+User -down-> Browser
+Browser -left-> App
+
+legend bottom
+Compose espera a que PostgreSQL esté saludable, ejecuta db-init y después inicia app.
+Solo se publica el puerto HTTP; PostgreSQL permanece en la red interna.
+endlegend
+
+@enduml

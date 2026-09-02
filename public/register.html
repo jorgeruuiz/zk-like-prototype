@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Registro Sum-Check</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <main class="auth-shell register-shell">
+            <section class="project-panel register-panel" aria-label="Información del registro">
+                <div class="brand-block">
+                    <span class="brand-kicker">Trabajo de Fin de Grado (826685)</span>
+                    <h1>Registro de usuario y generación de credenciales</h1>
+                    <p>
+                        En la fase de registro, el usuario proporciona un nombre de usuario y una
+                        contraseña. El sistema genera los datos de verificación necesarios para la verificación
+                        de la autenticación sin revelar la contraseña.
+                    </p>
+                    <p>
+                        Únicamente viajan al servidor los datos de verificación, mientras que la
+                        contraseña permanece en el lado del cliente dentro del alcance didáctico del prototipo.
+                    </p>
+                </div>
+
+                <div class="process-timeline" aria-label="Etapas del registro">
+                    <div class="timeline-step">
+                        <span>01</span>
+                        <div>
+                            <strong>Contraseña a bits</strong>
+                            <p>La entrada se convierte en una secuencia binaria de longitud fija.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <span>02</span>
+                        <div>
+                            <strong>Tabla de evaluaciones</strong>
+                            <p>Los bits se combinan con pesos públicos sobre el cuerpo finito.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <span>03</span>
+                        <div>
+                            <strong>Datos de verificación</strong>
+                            <p>Se almacenan el claim, valores finales y el compromiso polinomial.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="auth-card register-card" aria-label="Formulario de registro">
+                <div class="card-header">
+                    <span class="eyebrow">Alta de usuario</span>
+                    <h2>Crear credenciales de usuario</h2>
+                    <p>
+                        Selecciona el tamaño de la contraseña y registra un usuario para generar la
+                        instancia algebraica asociada a la autenticación.
+                    </p>
+                </div>
+
+                <div class="setup-panel">
+                    <div class="section-title-row">
+                        <div>
+                            <span class="eyebrow">Parámetros</span>
+                            <h3>Tamaño de contraseña</h3>
+                        </div>
+                        <span class="status-pill">Registro</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pw-bytes">Tamaño de contraseña</label>
+                        <select id="pw-bytes">
+                            <option value="4">4 bytes (32 bits)</option>
+                            <option value="8" selected>8 bytes (64 bits)</option>
+                            <option value="16">16 bytes (128 bits)</option>
+                            <option value="32">32 bytes (256 bits)</option>
+                            <option value="64">64 bytes (512 bits, depuración)</option>
+                            <option value="128">128 bytes (1024 bits, depuración)</option>
+                            <option value="256">256 bytes (2048 bits, depuración)</option>
+                        </select>
+                    </div>
+
+                    <div class="technical-note compact-note">
+                        La contraseña debe tener exactamente el número de bytes seleccionado y contener solo
+                        caracteres ASCII. Los tamaños grandes están pensados para pruebas de rendimiento.
+                    </div>
+                </div>
+
+                <div class="credentials-panel">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="u">Usuario</label>
+                            <input type="text" id="u" placeholder="Nombre de usuario" autocomplete="username" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="p">Contraseña</label>
+                            <input
+                                type="password"
+                                id="p"
+                                placeholder="Contraseña ASCII"
+                                autocomplete="new-password"
+                            />
+                            <div class="technical-note compact-note">
+                                La contraseña nunca viaja al servidor, se utiliza en el lado del cliente para generar
+                                los parámetros de verificación.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="reg()" class="primary-button">Registrar usuario</button>
+
+                <div class="feedback-area" aria-live="polite">
+                    <p id="m" class="status"></p>
+                </div>
+
+                <p class="footer-link">
+                    ¿Ya tienes cuenta? <a href="index.html">Volver al login</a>
+                </p>
+            </section>
+        </main>
+
+        <script type="module" src="register-app.js"></script>
+    </body>
+</html>

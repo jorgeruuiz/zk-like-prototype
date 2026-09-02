@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.docker.example
+node_modules
+npm-debug.log*
+doc
+scripts
+propuesta
+.DS_Store
+__MACOSX

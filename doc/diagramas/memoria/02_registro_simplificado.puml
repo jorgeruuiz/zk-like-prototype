@@ -1,0 +1,91 @@
+@startuml
+' Registro con nivel de detalle intermedio
+
+hide footbox
+autonumber
+skinparam shadowing false
+skinparam responseMessageBelowArrow true
+skinparam sequenceMessageAlign center
+skinparam wrapWidth 175
+skinparam maxMessageSize 115
+skinparam defaultFontSize 13
+skinparam BoxPadding 4
+skinparam LegendBackgroundColor #FFF59D
+skinparam LegendBorderColor #E67E22
+skinparam LegendFontColor #111111
+
+title Registro de usuario
+
+actor "Usuario" as User
+participant "Interfaz web" as UI
+participant "Cliente\nregister-app.js" as Client
+participant "Prover\nInteractiveSumCheck\nProver" as Prover
+participant "Fiat-Shamir y\ncompromiso" as Modules
+participant "Servidor\nExpress" as Server
+participant "Repositorio\ndatabase/" as Repository
+
+User -> UI : selecciona el tamaño\ndel secreto
+UI -> Client : carga los parámetros\nde registro
+activate Client
+
+Client -> Server : solicita desafío de registro
+activate Server
+Server -> Server : genera pesos, r\ny challengeId
+Server --> Client : parámetros públicos
+deactivate Server
+deactivate Client
+
+User -> UI : introduce usuario y contraseña\ny pulsa Registrar
+UI -> Client : solicita el registro
+activate Client
+
+Client -> Server : solicita el setup polinomial
+activate Server
+Server --> Client : tau didáctico
+deactivate Server
+
+create Prover
+Client -> Prover : new(password, weights, r)
+activate Prover
+Prover -> Prover : transforma la contraseña\ny crea las evaluaciones
+Prover --> Client : claim inicial y\ntabla de evaluaciones
+deactivate Prover
+
+Client -> Modules : calcula C_f = f(tau)
+activate Modules
+Modules --> Client : compromiso polinomial C_f
+deactivate Modules
+
+Client -> Prover : ejecuta localmente\nlas rondas con r
+activate Prover
+Prover --> Client : valor final g(r)
+deactivate Prover
+
+Client -> Modules : construye la prueba FS\ncon C_f en el enunciado
+activate Modules
+Modules --> Client : valor final Fiat-Shamir
+deactivate Modules
+
+Client -> Server : envía usuario y\ndatos de verificación
+activate Server
+Server -> Server : valida el desafío temporal
+Server -> Repository : guarda datos\nde verificación
+activate Repository
+Repository --> Server : operación completada
+deactivate Repository
+Server -> Server : elimina el desafío temporal
+Server --> Client : registro aceptado
+deactivate Server
+
+destroy Prover
+
+Client --> UI : muestra confirmación
+deactivate Client
+UI --> User : cuenta registrada
+
+legend bottom
+La contraseña y sus bits permanecen en el navegador.
+El servidor recibe únicamente datos de verificación.
+endlegend
+
+@enduml

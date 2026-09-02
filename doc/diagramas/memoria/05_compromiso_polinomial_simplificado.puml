@@ -1,0 +1,83 @@
+@startuml
+' Flujo Commit-Open-Verify compacto para el cuerpo de la memoria
+
+hide footbox
+autonumber
+skinparam shadowing false
+skinparam responseMessageBelowArrow true
+skinparam sequenceMessageAlign center
+skinparam wrapWidth 190
+skinparam maxMessageSize 125
+skinparam defaultFontSize 13
+skinparam LegendBackgroundColor #FFF59D
+skinparam LegendBorderColor #E67E22
+skinparam LegendFontColor #111111
+
+title Extensión polinomial didáctica
+
+participant "Navegador" as Client
+participant "Módulo polinomial\nCommit / Open" as ClientPoly
+participant "Servidor Express" as Server
+participant "Módulo polinomial\nVerify" as ServerPoly
+participant "Repositorio de usuarios\ndatabase/" as Repository
+
+== Registro: Commit ==
+
+activate Client
+Client -> Server : solicita el setup polinomial
+activate Server
+Server --> Client : tau didáctico
+deactivate Server
+Client -> ClientPoly : configura tau, construye f(X)\ny calcula C_f=f(tau)
+activate ClientPoly
+ClientPoly --> Client : compromiso C_f
+deactivate ClientPoly
+Client -> Server : envía C_f con el registro
+activate Server
+Server -> Repository : persiste C_f
+activate Repository
+Repository --> Server : operación completada
+deactivate Repository
+deactivate Server
+
+== Autenticación: Open ==
+
+Client -> Server : solicita parámetros de login\ny, después, el setup polinomial
+activate Server
+Server --> Client : punto z y tau didáctico
+deactivate Server
+Client -> Client : reconstruye las evaluaciones\ndesde la contraseña
+Client -> ClientPoly : configura tau y calcula\ny=f(z), pi=q(tau)
+activate ClientPoly
+ClientPoly --> Client : apertura (z, y, pi)
+deactivate ClientPoly
+Client -> Server : envía la apertura
+activate Server
+
+== Autenticación: Verify ==
+
+alt Login interactivo
+    Server -> Server : recupera C_f de la sesión temporal
+else Login Fiat-Shamir
+    Server -> Repository : consulta los datos del usuario
+    activate Repository
+    Repository --> Server : C_f registrado
+    deactivate Repository
+end
+
+Server -> ServerPoly : verify(C_f, z, y, pi)
+activate ServerPoly
+ServerPoly -> ServerPoly : comprueba\nC_f-y=(tau-z)pi
+ServerPoly --> Server : válida / inválida
+deactivate ServerPoly
+Server --> Client : acepta o rechaza la apertura
+deactivate Server
+deactivate Client
+
+legend bottom
+En el modo interactivo z se genera al iniciar el login; en Fiat-Shamir se deriva de forma determinista.
+tau es público: se ilustra Commit-Open-Verify, pero no la seguridad de KZG.
+Módulo polinomial Commit/Open y Módulo polinomial Verify representan el mismo módulo JavaScript reutilizado en ambos entornos.
+endlegend
+
+@enduml

@@ -1,0 +1,64 @@
+name: zkp-prototype
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${DOCKER_DB_USER:-zkp}
+      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD:-zkp_demo_password}
+      POSTGRES_DB: ${DOCKER_DB_NAME:-server_zkp}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  db-init:
+    build:
+      context: .
+    command: ["npm", "run", "db:setup"]
+    healthcheck:
+      disable: true
+    environment:
+      DB_USER: ${DOCKER_DB_USER:-zkp}
+      DB_PASSWORD: ${DOCKER_DB_PASSWORD:-zkp_demo_password}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DOCKER_DB_NAME:-server_zkp}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    build:
+      context: .
+    init: true
+    environment:
+      DB_USER: ${DOCKER_DB_USER:-zkp}
+      DB_PASSWORD: ${DOCKER_DB_PASSWORD:-zkp_demo_password}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DOCKER_DB_NAME:-server_zkp}
+      PORT: 3000
+      NODE_ENV: development
+      AUTH_SESSION_SECRET: ${DOCKER_AUTH_SESSION_SECRET:-docker-demo-change-this-secret}
+      ZKP_TRACE: ${ZKP_TRACE:-0}
+      ZKP_TRACE_LEVEL: ${ZKP_TRACE_LEVEL:-flow}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

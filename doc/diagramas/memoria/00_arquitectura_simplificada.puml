@@ -1,0 +1,104 @@
+@startuml
+' Arquitectura lógica con ficheros agrupados por módulo
+
+left to right direction
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+skinparam wrapWidth 240
+skinparam linetype ortho
+skinparam nodesep 42
+skinparam ranksep 48
+skinparam ArrowColor black
+
+skinparam package {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+skinparam component {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+skinparam collections {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+skinparam database {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+skinparam artifact {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+title Arquitectura lógica del prototipo
+
+package "Cliente web\n<font:monospaced>public/" as Frontend {
+    component "Vistas\n<font:monospaced>index.html · register.html\nprivate.html" as Views
+    component "Controladores cliente\n<font:monospaced>login-app.js · register-app.js\nRol: prover" as ClientApps
+    component "Presentación\n<font:monospaced>styles.css" as Styles
+
+    Views -down-> ClientApps
+    Views ..right..> Styles
+}
+
+package "Servidor HTTP\n<font:monospaced>server/" as Backend {
+    component "Arranque\n<font:monospaced>server.js" as Boot
+    component "API y coordinación\n<font:monospaced>app.js\nRol: verifier" as API
+    collections "Estado temporal\n<font:monospaced>registrationChallenges\nloginSessions" as Temp
+
+    Boot -down-> API
+    API -down-> Temp
+}
+
+package "Persistencia\n<font:monospaced>database/" as Persistence {
+    component "Repositorio de usuarios\n<font:monospaced>user_repository.js" as UserRepository
+    component "Pool de conexiones\n<font:monospaced>db.js" as DBClient
+    component "Preparación del esquema\n<font:monospaced>db_setup.js" as DBSchema
+    database "PostgreSQL\n<font:monospaced>usuarios" as DB
+
+    UserRepository -down-> DBClient
+    DBSchema -down-> DBClient
+    DBClient -down-> DB
+}
+
+package "Protocolo compartido\n<font:monospaced>sum-check-protocol/" as Protocol {
+    component "Pruebas y verificación\n<font:monospaced>prover.js · verifier.js\nfiat-shamir.js\npolynomial-commitment.js" as ProofModules
+    component "Núcleo algebraico\n<font:monospaced>field.js · protocol.js" as Core
+    artifact "Setup polinomial didáctico\n<font:monospaced>setup-polynomial-commitment.js\ntrusted-setup.json" as Setup
+
+    ProofModules -right-> Core
+    Setup -up-> ProofModules
+}
+
+ClientApps -right-> API
+API -right-> UserRepository
+
+ClientApps -down-> ProofModules
+API -down-> ProofModules
+
+Frontend -[hidden]right-> Backend
+Backend -[hidden]right-> Persistence
+Backend -[hidden]down-> Protocol
+
+legend bottom
+Flujo principal: cliente web → API HTTP/JSON → repositorio → PostgreSQL.
+Los controladores cliente y la API reutilizan el módulo de protocolo con roles distintos.
+La contraseña se procesa en el navegador y no se envía al servidor.
+La extensión polinomial reproduce el flujo didáctico, no la seguridad de un KZG real.
+endlegend
+
+@enduml

@@ -1,0 +1,97 @@
+@startuml
+' Login Fiat-Shamir compacto para el cuerpo de la memoria
+
+hide footbox
+autonumber
+skinparam shadowing false
+skinparam responseMessageBelowArrow true
+skinparam sequenceMessageAlign center
+skinparam wrapWidth 190
+skinparam maxMessageSize 125
+skinparam defaultFontSize 13
+skinparam BoxPadding 4
+skinparam LegendBackgroundColor #FFF59D
+skinparam LegendBorderColor #E67E22
+skinparam LegendFontColor #111111
+
+title Autenticación no interactiva con Fiat-Shamir
+
+actor "Usuario" as User
+participant "Interfaz web" as UI
+participant "Cliente\nlogin-app.js" as Client
+participant "Prover FS\nbuildFiatShamir\nProof()" as FSProver
+participant "Prueba FS\nproof" as Proof
+participant "Servidor\nExpress" as Server
+participant "Verifier FS\nverifyFiatShamir\nProof()" as FSVerifier
+participant "Repositorio\ndatabase/" as Repository
+
+User -> UI : introduce usuario y contraseña
+UI -> Client : inicia el login Fiat-Shamir
+activate Client
+
+Client -> Server : solicita parámetros públicos
+activate Server
+Server -> Repository : recupera datos FS
+activate Repository
+Repository --> Server : claim, valor final,\npesos y C_f
+deactivate Repository
+Server -> Server : deriva z de forma determinista\nsi existe C_f
+Server --> Client : pesos, C_f y punto z\nsi existen
+deactivate Server
+
+opt Apertura polinomial activada
+    Client -> Server : solicita el setup polinomial
+    activate Server
+    Server --> Client : tau didáctico
+    deactivate Server
+end
+
+Client -> FSProver : construye la prueba\ndesde la contraseña
+activate FSProver
+loop Por cada ronda j
+    FSProver -> FSProver : genera s_j(0), s_j(1),\nactualiza T y deriva r_j=H(T)
+end
+create Proof
+FSProver -> Proof : crea roundMessages\ny foldedValue
+activate Proof
+Proof --> Client : prueba completa
+deactivate FSProver
+
+opt Apertura polinomial activada
+    Client -> Client : calcula la apertura (z, y, pi)
+end
+
+Client -> Server : envía mensajes, valor final\ny apertura opcional
+activate Server
+Server -> Repository : recupera valores\nesperados
+activate Repository
+Repository --> Server : datos de verificación
+deactivate Repository
+Server -> FSVerifier : reconstruye T y verifica\nrondas y valor final
+activate FSVerifier
+FSVerifier --> Server : prueba válida / inválida
+deactivate FSVerifier
+
+opt Apertura polinomial activada
+    Server -> Server : recalcula z y verifica\nla apertura frente a C_f
+end
+
+alt Todas las comprobaciones son válidas
+    Server --> Client : crea cookie y concede acceso
+else Alguna comprobación falla
+    Server --> Client : rechaza la autenticación
+end
+deactivate Server
+
+deactivate Proof
+destroy Proof
+Client --> UI : muestra el resultado
+deactivate Client
+UI --> User : acceso o mensaje de error
+
+legend bottom
+El enunciado liga dominio, protocolo, p, usuario, longitud, rondas, claim inicial, pesos y C_f.
+No se crea una sesión interactiva: la prueba completa se verifica en un único POST.
+endlegend
+
+@enduml

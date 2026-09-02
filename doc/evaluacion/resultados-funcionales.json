@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-06-25T15:20:18.847Z",
+  "environment": {
+    "baseUrl": "http://127.0.0.1:3000",
+    "client": "Node.js automated local HTTP client"
+  },
+  "registration": {
+    "accepted": true,
+    "duplicateRejected": true,
+    "duplicateStatus": 409
+  },
+  "positiveCases": {
+    "interactive": {
+      "ok": true,
+      "stage": "finish",
+      "status": 200,
+      "error": null,
+      "totalMs": 20.9,
+      "httpRequests": 8,
+      "requestBytes": 831,
+      "responseBytes": 2394,
+      "reportedElapsedMs": 13
+    },
+    "interactivePoly": {
+      "ok": true,
+      "stage": "finish",
+      "status": 200,
+      "error": null,
+      "totalMs": 10.18,
+      "httpRequests": 8,
+      "requestBytes": 953,
+      "responseBytes": 2389,
+      "reportedElapsedMs": 9
+    },
+    "fiatShamir": {
+      "ok": true,
+      "stage": "finish",
+      "status": 200,
+      "error": null,
+      "totalMs": 6.71,
+      "httpRequests": 2,
+      "requestBytes": 544,
+      "responseBytes": 1669,
+      "reportedElapsedMs": 2
+    },
+    "fiatShamirPoly": {
+      "ok": true,
+      "stage": "finish",
+      "status": 200,
+      "error": null,
+      "totalMs": 7.02,
+      "httpRequests": 2,
+      "requestBytes": 667,
+      "responseBytes": 1669,
+      "reportedElapsedMs": 2
+    }
+  },
+  "negativeCases": {
+    "wrongPasswordInteractive": {
+      "ok": false,
+      "stage": "round",
+      "status": 400,
+      "error": "La ronda no es consistente con el claim actual",
+      "totalMs": 3.72,
+      "httpRequests": 2,
+      "requestBytes": 119,
+      "responseBytes": 1854,
+      "reportedElapsedMs": null
+    },
+    "tamperedFiatShamir": {
+      "ok": false,
+      "stage": "finish",
+      "status": 400,
+      "error": "La ronda no es consistente con el claim actual",
+      "totalMs": 4.93,
+      "httpRequests": 2,
+      "requestBytes": 544,
+      "responseBytes": 1697,
+      "reportedElapsedMs": null
+    },
+    "tamperedPolynomialOpening": {
+      "ok": false,
+      "stage": "finish",
+      "status": 400,
+      "error": "Apertura polinomial no valida. Si se ha regenerado el trusted setup, vuelve a registrar el usuario.",
+      "totalMs": 10.29,
+      "httpRequests": 8,
+      "requestBytes": 956,
+      "responseBytes": 2472,
+      "reportedElapsedMs": null
+    },
+    "missingUser": {
+      "ok": false,
+      "stage": "challenge",
+      "status": 404,
+      "error": "Usuario no encontrado",
+      "totalMs": 1.16,
+      "httpRequests": 1,
+      "requestBytes": 0,
+      "responseBytes": 33,
+      "reportedElapsedMs": null
+    }
+  },
+  "webSession": {
+    "authenticated": true,
+    "privatePageStatus": 200,
+    "logoutAccepted": true,
+    "rejectedAfterLogout": true
+  }
+}

@@ -1,0 +1,51 @@
+@startuml
+' Visión funcional del prototipo
+
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam activity {
+    BorderColor #C2185B
+    BackgroundColor #FFF8DC
+    DiamondBorderColor #C2185B
+    DiamondBackgroundColor #FFF8DC
+}
+
+title Flujo funcional del prototipo
+
+start
+
+:El usuario elige\nregistro o autenticación;
+
+if (¿Registro?) then (Sí)
+    :El servidor genera\nparámetros públicos;
+    :El navegador deriva los datos\nde verificación desde la contraseña;
+    :El servidor almacena esos datos,\nno la contraseña;
+    :Cuenta registrada;
+else (Autenticación)
+    :El servidor recupera los datos\nde verificación del usuario;
+
+    if (¿Modo interactivo?) then (Sí)
+        :Cliente y servidor ejecutan\nlas rondas de Sum-Check;
+    else (Fiat-Shamir)
+        :El cliente genera una prueba completa;
+        :Envía los mensajes y el valor final\nen una petición de verificación;
+    endif
+
+    if (¿Apertura polinomial activada?) then (Sí)
+        :El cliente genera una apertura;
+        :El servidor la contrasta con\nel compromiso registrado;
+    else (No)
+        :No se verifica la apertura\npolinomial;
+    endif
+
+    if (¿Prueba válida?) then (Sí)
+        :El servidor crea una\ncookie de autenticación;
+        :Acceso concedido;
+    else (No)
+        :Autenticación rechazada;
+    endif
+endif
+
+stop
+
+@enduml

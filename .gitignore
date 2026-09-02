@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.docker
+.package-lock.json
+.DS_Store
+__MACOSX/
+*.log
+*.png
+*.pdf
+*.svg

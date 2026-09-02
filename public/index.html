@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Aplicación de Pruebas de Conocimiento Cero en la Autenticación mediante Sum-Check</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <main class="auth-shell">
+            <section class="project-panel" aria-label="Información del proyecto">
+                <div class="brand-block">
+                    <span class="brand-kicker">Trabajo de Fin de Grado (826685)</span>
+                    <h1>Aplicación de Pruebas de Conocimiento Cero en la Autenticación mediante Sum-Check</h1>
+                    <p>
+                        El sistema desarrollado es una construcción ZK-like que ilustra cómo un usuario
+                        (Prover) puede probar conocimiento de un secreto (contraseña) ante un tercero
+                        (Verifier) sin enviarlo directamente.
+                    </p>
+                    <p>
+                        Se trata de un prototipo didáctico de autenticación basado en la aplicación de
+                        técnicas del paradigma de conocimiento cero, concretamente el protocolo de
+                        Sum-Check y su transformación de Fiat-Shamir para eliminar la necesidad de
+                        interacción en tiempo real. Además se proporciona una extensión experimental
+                        de compromiso polinomial para ilustrar la identidad algebraica de apertura.
+                    </p>
+                </div>
+
+                <div class="project-summary">
+                    <div>
+                        <span class="summary-label">Protocolo base</span>
+                        <strong>Sum-Check</strong>
+                    </div>
+                    <div>
+                        <span class="summary-label">Modo opcional</span>
+                        <strong>Fiat-Shamir</strong>
+                    </div>
+                    <div>
+                        <span class="summary-label">Extensión</span>
+                        <strong>Compromiso polinomial</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="auth-card" aria-label="Formulario de autenticación">
+                <div class="card-header">
+                    <span class="eyebrow"></span>
+                    <h2>Iniciar sesión</h2>
+                    <p>
+                        Introduce las credenciales registradas y selecciona la variante de verificación
+                        que quieres ejecutar.
+                    </p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="u">Usuario</label>
+                        <input type="text" id="u" placeholder="Nombre de usuario" autocomplete="username" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="p">Contraseña</label>
+                        <input
+                            type="password"
+                            id="p"
+                            placeholder="Contraseña ASCII según registro"
+                            autocomplete="current-password"
+                        />
+                    </div>
+                </div>
+
+                <div class="protocol-options">
+                    <div class="section-title-row">
+                        <div>
+                            <span class="eyebrow">Configuración</span>
+                            <h3>Tipo de prueba</h3>
+                        </div>
+                        <span class="status-pill">Login</span>
+                    </div>
+
+                    <label class="option-card" for="fs-mode">
+                        <input type="checkbox" id="fs-mode" />
+                        <span>
+                            <strong>Transformación de Fiat-Shamir</strong>
+                            <small>Genera los retos mediante hash del transcript acumulado.</small>
+                        </span>
+                    </label>
+
+                    <label class="option-card" for="poly-mode">
+                        <input type="checkbox" id="poly-mode" />
+                        <span>
+                            <strong>Apertura de compromiso polinomial</strong>
+                            <small>Activa la verificación Commit/Open/Verify experimental.</small>
+                        </span>
+                    </label>
+
+                    <div class="technical-note">
+                        La capa polinomial ilustra la identidad algebraica de apertura. No constituye
+                        una prueba de conocimiento cero formal ni una implementación KZG real.
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button id="btn" class="primary-button">Iniciar autenticación</button>
+                    <button id="bench-btn" class="secondary-button">Comparar rendimiento</button>
+                </div>
+
+                <div class="feedback-area" aria-live="polite">
+                    <p id="s" class="status"></p>
+                    <p id="bench-result" class="result"></p>
+                </div>
+
+                <p class="footer-link">
+                    ¿No tienes usuario? <a href="register.html">Crear una cuenta nueva</a>
+                </p>
+            </section>
+        </main>
+
+        <script type="module" src="login-app.js"></script>
+    </body>
+</html>

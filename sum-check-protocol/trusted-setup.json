@@ -1,0 +1,7 @@
+{
+  "scheme": "educational-kzg-like",
+  "fieldPrime": "18446744073709551557",
+  "maxDegree": 4096,
+  "tau": "1003054581048562016",
+  "warning": "Educational setup only. Tau is public/stored in this prototype and therefore this is not cryptographically secure. Regenerating this file invalidates existing poly_commitments."
+}

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Usuario autenticado</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <main class="private-shell">
+            <section class="private-hero" aria-label="Estado de la sesión">
+                <div>
+                    <span class="brand-kicker">Zona privada</span>
+                    <h1>Usuario autenticado correctamente</h1>
+                    <p>
+                        Esta pantalla representa el recurso protegido del prototipo. El acceso solo se
+                        concede cuando el servidor acepta la prueba de autenticación generada en el login.
+                    </p>
+                </div>
+
+                <div class="session-panel">
+                    <span class="session-label">Estado actual</span>
+                    <p id="who" class="session-user"></p>
+                    <button onclick="logout()" class="danger-button compact-button">Cerrar sesión</button>
+                </div>
+            </section>
+
+            <section class="private-content" aria-label="Resumen del prototipo">
+                <article class="dashboard-card highlighted-card">
+                    <span class="eyebrow">Resultado</span>
+                    <h2>Acceso autorizado</h2>
+                    <p>
+                        El servidor ha validado la prueba asociada al conocimiento de la contraseña y ha
+                        creado una sesión autenticada para el usuario.
+                    </p>
+                </article>
+
+                <article class="dashboard-card">
+                    <span class="card-number">01</span>
+                    <h3>Aritmetización</h3>
+                    <p>
+                        La contraseña se transforma en bits y en una tabla de evaluaciones sobre un cuerpo
+                        finito, común a las variantes implementadas.
+                    </p>
+                </article>
+
+                <article class="dashboard-card">
+                    <span class="card-number">02</span>
+                    <h3>Sum-Check</h3>
+                    <p>
+                        La verificación principal reduce una suma sobre el hipercubo booleano mediante
+                        rondas de plegado y comprobaciones algebraicas.
+                    </p>
+                </article>
+
+                <article class="dashboard-card">
+                    <span class="card-number">03</span>
+                    <h3>Capas opcionales</h3>
+                    <p>
+                        Fiat-Shamir elimina interacción y la apertura polinomial ilustra la identidad de
+                        verificación usada en compromisos didácticos.
+                    </p>
+                </article>
+            </section>
+
+            <section class="private-note" aria-label="Aviso técnico">
+                <strong>Nota técnica</strong>
+                <p>
+                    El prototipo tiene finalidad académica. La capa polinomial no implementa KZG real,
+                    ocultación formal ni una ceremonia segura de trusted setup.
+                </p>
+            </section>
+        </main>
+
+        <script>
+            async function ensureSession() {
+                try {
+                    const response = await fetch('/api/auth/session');
+                    const data = await response.json();
+
+                    if (!response.ok || !data.authenticated) {
+                        window.location.href = 'index.html';
+                        return;
+                    }
+
+                    const who = document.getElementById('who');
+                    who.innerText = `Sesión activa: ${data.username}`;
+                } catch {
+                    window.location.href = 'index.html';
+                }
+            }
+
+            async function logout() {
+                try {
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                } finally {
+                    window.location.href = 'index.html';
+                }
+            }
+
+            ensureSession();
+        </script>
+    </body>
+</html>

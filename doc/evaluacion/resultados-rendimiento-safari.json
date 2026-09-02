@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-06-25",
+  "environment": {
+    "browser": "Safari 26.5 (21624.2.5.11.4)",
+    "host": "iMac Apple M1, 8 cores, 16 GB RAM",
+    "operatingSystem": "macOS 26.5.1",
+    "baseUrl": "http://localhost:3000"
+  },
+  "methodology": {
+    "client": "Integrated browser benchmark",
+    "warmupRuns": 5,
+    "measuredRuns": 30,
+    "configurationsInterleaved": true,
+    "metric": "End-to-end client latency measured with performance.now()",
+    "traceEnabled": false
+  },
+  "results": [
+    {
+      "passwordBytes": 4,
+      "rounds": 5,
+      "interactive": { "meanMs": 20.33, "medianMs": 19, "p95Ms": 25 },
+      "interactivePoly": { "meanMs": 20.8, "medianMs": 20, "p95Ms": 25 },
+      "fiatShamir": { "meanMs": 9.07, "medianMs": 9, "p95Ms": 10 },
+      "fiatShamirPoly": { "meanMs": 10.4, "medianMs": 10, "p95Ms": 13 }
+    },
+    {
+      "passwordBytes": 8,
+      "rounds": 6,
+      "interactive": { "meanMs": 23.77, "medianMs": 23, "p95Ms": 28 },
+      "interactivePoly": { "meanMs": 25.83, "medianMs": 25, "p95Ms": 31 },
+      "fiatShamir": { "meanMs": 10.63, "medianMs": 11, "p95Ms": 12 },
+      "fiatShamirPoly": { "meanMs": 12.53, "medianMs": 12, "p95Ms": 14 }
+    },
+    {
+      "passwordBytes": 16,
+      "rounds": 7,
+      "interactive": { "meanMs": 27.9, "medianMs": 28, "p95Ms": 30 },
+      "interactivePoly": { "meanMs": 31.8, "medianMs": 32, "p95Ms": 34 },
+      "fiatShamir": { "meanMs": 13.97, "medianMs": 14, "p95Ms": 16 },
+      "fiatShamirPoly": { "meanMs": 17.8, "medianMs": 18, "p95Ms": 20 }
+    },
+    {
+      "passwordBytes": 32,
+      "rounds": 8,
+      "interactive": { "meanMs": 35.5, "medianMs": 35, "p95Ms": 39 },
+      "interactivePoly": { "meanMs": 43.07, "medianMs": 43.5, "p95Ms": 46 },
+      "fiatShamir": { "meanMs": 19.93, "medianMs": 20, "p95Ms": 22 },
+      "fiatShamirPoly": { "meanMs": 26.87, "medianMs": 27, "p95Ms": 30 }
+    },
+    {
+      "passwordBytes": 64,
+      "rounds": 9,
+      "interactive": { "meanMs": 46.83, "medianMs": 46.5, "p95Ms": 51 },
+      "interactivePoly": { "meanMs": 59.8, "medianMs": 60, "p95Ms": 63 },
+      "fiatShamir": { "meanMs": 29.57, "medianMs": 30, "p95Ms": 32 },
+      "fiatShamirPoly": { "meanMs": 43.3, "medianMs": 43, "p95Ms": 47 }
+    },
+    {
+      "passwordBytes": 128,
+      "rounds": 10,
+      "interactive": { "meanMs": 67.37, "medianMs": 67, "p95Ms": 72 },
+      "interactivePoly": { "meanMs": 90.27, "medianMs": 89, "p95Ms": 93 },
+      "fiatShamir": { "meanMs": 48.7, "medianMs": 49, "p95Ms": 52 },
+      "fiatShamirPoly": { "meanMs": 74.33, "medianMs": 75, "p95Ms": 78 }
+    },
+    {
+      "passwordBytes": 256,
+      "rounds": 11,
+      "interactive": { "meanMs": 151.27, "medianMs": 102, "p95Ms": 432 },
+      "interactivePoly": { "meanMs": 237.6, "medianMs": 149, "p95Ms": 736 },
+      "fiatShamir": { "meanMs": 144.73, "medianMs": 86, "p95Ms": 435 },
+      "fiatShamirPoly": { "meanMs": 234.27, "medianMs": 134, "p95Ms": 696 }
+    }
+  ]
+}

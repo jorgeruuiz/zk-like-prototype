@@ -1,0 +1,67 @@
+{
+    "name": "tfg-zkp",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Prototipo académico de autenticación inspirado en sum-check y Fiat-Shamir.",
+    "type": "module",
+    "scripts": {
+        "start": "node server/server.js",
+        "dev": "node --watch server/server.js",
+
+        "start:trace": "cross-env ZKP_TRACE=1 node server/server.js",
+        "start:trace:verbose": "cross-env ZKP_TRACE=1 ZKP_TRACE_LEVEL=verbose node server/server.js",
+
+        "dev:trace": "cross-env ZKP_TRACE=1 node --watch server/server.js",
+        "dev:trace:verbose": "cross-env ZKP_TRACE=1 ZKP_TRACE_LEVEL=verbose node --watch server/server.js",
+
+        "db:setup": "node database/db_setup.js",
+        "poly:setup": "node sum-check-protocol/setup-polynomial-commitment.js",
+
+        "docker:up": "docker compose up --build -d",
+        "docker:down": "docker compose down",
+        "docker:logs": "docker compose logs -f app",
+        "docker:start:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-docker.ps1",
+        "docker:stop:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/stop-docker.ps1",
+        "docker:start:unix": "bash scripts/start-docker.sh",
+        "docker:stop:unix": "bash scripts/stop-docker.sh",
+        "clean:local": "bash scripts/clean.sh --local",
+        "clean:docker": "bash scripts/clean.sh --docker",
+        "rebuild:local": "bash scripts/rebuild.sh --local",
+        "rebuild:docker": "bash scripts/rebuild.sh --docker",
+
+        "doc:diagramas": "bash scripts/generate_diagrams.sh",
+
+        "check:js": "node scripts/check-js.js",
+        "format": "prettier --write \"server/**/*.js\" \"database/**/*.js\" \"public/**/*.js\" \"sum-check-protocol/**/*.js\" \"scripts/**/*.js\"",
+        "format:check": "prettier --check \"server/**/*.js\" \"database/**/*.js\" \"public/**/*.js\" \"sum-check-protocol/**/*.js\" \"scripts/**/*.js\"",
+        "test": "node -e \"console.log('No hay tests automáticos implementados.')\""
+    },
+    "keywords": [
+        "zero-knowledge",
+        "sum-check",
+        "fiat-shamir",
+        "tfg"
+    ],
+    "author": "Jorge Ruiz González",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jorgeruuiz/zk-like-prototype.git"
+    },
+    "homepage": "https://github.com/jorgeruuiz/zk-like-prototype",
+    "bugs": {
+        "url": "https://github.com/jorgeruuiz/zk-like-prototype/issues"
+    },
+    "engines": {
+        "node": ">=18.19.0"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "express": "^5.2.1",
+        "pg": "^8.18.0"
+    },
+    "devDependencies": {
+        "cross-env": "^7.0.3",
+        "prettier": "^3.8.1"
+    }
+}

@@ -1,0 +1,102 @@
+@startuml
+' Login interactivo compacto para el cuerpo de la memoria
+
+hide footbox
+autonumber
+skinparam shadowing false
+skinparam responseMessageBelowArrow true
+skinparam sequenceMessageAlign center
+skinparam wrapWidth 190
+skinparam maxMessageSize 125
+skinparam defaultFontSize 13
+skinparam BoxPadding 4
+skinparam LegendBackgroundColor #FFF59D
+skinparam LegendBorderColor #E67E22
+skinparam LegendFontColor #111111
+
+title Autenticación Sum-Check interactiva
+
+actor "Usuario" as User
+participant "Interfaz web" as UI
+participant "Cliente\nlogin-app.js" as Client
+participant "Prover\nInteractiveSumCheck\nProver" as Prover
+participant "Servidor\nExpress" as Server
+participant "Verifier\nSumCheckVerifier\nSession" as Verifier
+participant "Repositorio\ndatabase/" as Repository
+
+User -> UI : introduce usuario y contraseña
+UI -> Client : inicia el login interactivo
+activate Client
+
+Client -> Server : solicita el desafío de login
+activate Server
+Server -> Repository : recupera datos
+activate Repository
+Repository --> Server : claim, valor final, pesos,\npunto r y C_f
+deactivate Repository
+create Verifier
+Server -> Verifier : crea sesión con\nclaim, valor final y r
+activate Verifier
+Server -> Server : guarda verifier, C_f y z\nen loginSessions[loginId]
+Server --> Client : loginId, pesos, r\ny z si existe C_f
+deactivate Server
+
+opt Apertura polinomial activada
+    Client -> Server : solicita el setup polinomial
+    activate Server
+    Server --> Client : tau didáctico
+    deactivate Server
+end
+
+create Prover
+Client -> Prover : crea el prover con\npassword, pesos y r
+activate Prover
+
+opt Apertura polinomial activada
+    Client -> Client : calcula (z, y, pi) desde\nlas evaluaciones iniciales
+end
+
+loop Por cada ronda j
+    Client -> Prover : construye s_j(0), s_j(1)
+    Prover --> Client : mensaje de ronda
+    Client -> Server : envía loginId y mensaje
+    activate Server
+    Server -> Verifier : verifica s_j(0)+s_j(1)=claim_j\ny actualiza con r_j
+    Verifier --> Server : ronda válida / error
+    Server --> Client : resultado de la ronda
+    deactivate Server
+    Client -> Prover : consume r_j y pliega la tabla
+end
+
+Client -> Server : envía g(r) y\napertura opcional
+activate Server
+Server -> Verifier : verifica g(r) frente al claim final\ny al valor registrado
+Verifier --> Server : resultado Sum-Check
+
+opt Apertura polinomial activada
+    Server -> Server : verifica (z, y, pi)\nfrente a C_f
+end
+
+Server -> Server : elimina loginSessions[loginId]
+deactivate Verifier
+destroy Verifier
+
+alt Todas las comprobaciones son válidas
+    Server --> Client : crea cookie y concede acceso
+else Alguna comprobación falla
+    Server --> Client : rechaza la autenticación
+end
+deactivate Server
+
+deactivate Prover
+destroy Prover
+Client --> UI : muestra el resultado
+deactivate Client
+UI --> User : acceso o mensaje de error
+
+legend bottom
+El punto r se genera y persiste durante el registro y se entrega completo al iniciar el login.
+El prover en el navegador y el verifier en el servidor mantienen el estado de las rondas.
+endlegend
+
+@enduml
