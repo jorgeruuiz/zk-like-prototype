@@ -8,3 +8,7 @@ __MACOSX/
 *.png
 *.pdf
 *.svg
+
+# Memoria final del TFG (el resto de PDF generados continúa ignorado)
+!doc/memoria/
+!doc/memoria/memoria_ruiz_gonzalez_jorge.pdf

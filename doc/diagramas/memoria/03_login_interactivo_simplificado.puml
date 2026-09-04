@@ -32,10 +32,10 @@ Client -> Server : solicita el desafío de login
 activate Server
 Server -> Repository : recupera datos
 activate Repository
-Repository --> Server : claim, valor final, pesos,\npunto r y C_f
+Repository --> Server : <i>claim</i>, valor final, pesos,\npunto r y C_f
 deactivate Repository
 create Verifier
-Server -> Verifier : crea sesión con\nclaim, valor final y r
+Server -> Verifier : crea sesión con\n<i>claim</i>, valor final y r
 activate Verifier
 Server -> Server : guarda verifier, C_f y z\nen loginSessions[loginId]
 Server --> Client : loginId, pesos, r\ny z si existe C_f
@@ -61,7 +61,7 @@ loop Por cada ronda j
     Prover --> Client : mensaje de ronda
     Client -> Server : envía loginId y mensaje
     activate Server
-    Server -> Verifier : verifica s_j(0)+s_j(1)=claim_j\ny actualiza con r_j
+    Server -> Verifier : verifica s_j(0)+s_j(1)=<i>claim_j</i>\ny actualiza con r_j
     Verifier --> Server : ronda válida / error
     Server --> Client : resultado de la ronda
     deactivate Server
@@ -70,7 +70,7 @@ end
 
 Client -> Server : envía g(r) y\napertura opcional
 activate Server
-Server -> Verifier : verifica g(r) frente al claim final\ny al valor registrado
+Server -> Verifier : verifica g(r) frente al <i>claim</i> final\ny al valor registrado
 Verifier --> Server : resultado Sum-Check
 
 opt Apertura polinomial activada

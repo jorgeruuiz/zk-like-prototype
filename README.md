@@ -43,6 +43,11 @@ scripts/
   clean.sh               Limpieza controlada de usuarios.
   rebuild.sh             Reconstrucción del entorno.
   generate_diagrams.sh   Generación de diagramas PlantUML.
+
+doc/
+  diagramas/             Fuentes PlantUML utilizadas en la memoria.
+  evaluacion/            Procedimiento y resultados de la evaluación.
+  memoria/               Memoria final del Trabajo Fin de Grado.
 ```
 
 ## Organización del acceso a datos
@@ -360,6 +365,11 @@ Para comprobar las dependencias instaladas en producción:
 ```bash
 npm audit --omit=dev
 ```
+
+## Memoria
+
+La memoria final del Trabajo Fin de Grado está disponible en
+[`doc/memoria/memoria_ruiz_gonzalez_jorge.pdf`](doc/memoria/memoria_ruiz_gonzalez_jorge.pdf).
 
 ## Diagramas
 

@@ -48,7 +48,7 @@ create Prover
 Client -> Prover : new(password, weights, r)
 activate Prover
 Prover -> Prover : transforma la contraseña\ny crea las evaluaciones
-Prover --> Client : claim inicial y\ntabla de evaluaciones
+Prover --> Client : <i>claim</i> inicial y\ntabla de evaluaciones
 deactivate Prover
 
 Client -> Modules : calcula C_f = f(tau)

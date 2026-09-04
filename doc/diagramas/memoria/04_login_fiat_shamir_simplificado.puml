@@ -33,7 +33,7 @@ Client -> Server : solicita parámetros públicos
 activate Server
 Server -> Repository : recupera datos FS
 activate Repository
-Repository --> Server : claim, valor final,\npesos y C_f
+Repository --> Server : <i>claim</i>, valor final,\npesos y C_f
 deactivate Repository
 Server -> Server : deriva z de forma determinista\nsi existe C_f
 Server --> Client : pesos, C_f y punto z\nsi existen
@@ -90,7 +90,7 @@ deactivate Client
 UI --> User : acceso o mensaje de error
 
 legend bottom
-El enunciado liga dominio, protocolo, p, usuario, longitud, rondas, claim inicial, pesos y C_f.
+El enunciado liga dominio, protocolo, p, usuario, longitud, rondas, <i>claim</i> inicial, pesos y C_f.
 No se crea una sesión interactiva: la prueba completa se verifica en un único POST.
 endlegend
 
